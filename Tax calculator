@@ -1,0 +1,80 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(TaxCalculatorApp());
+}
+
+class TaxCalculatorApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Tax calculator',
+      home: TaxCalculatorScreen(),
+    );
+  }
+}
+
+class TaxCalculatorScreen extends StatefulWidget {
+  @override
+  _TaxCalculatorScreenState createState() => _TaxCalculatorScreenState();
+}
+
+class _TaxCalculatorScreenState extends State<TaxCalculatorScreen> {
+  final TextEditingController _incomeController = TextEditingController();
+  final TextEditingController _taxRateController = TextEditingController();
+  String _taxAmount = '';
+
+  void _calculateTax() {
+    double income = double.tryParse(_incomeController.text) ?? 0;
+    double taxRate = double.tryParse(_taxRateController.text) ?? 0;
+
+    double tax = income * (taxRate / 100);
+    setState(() {
+      _taxAmount = tax.toStringAsFixed(2); // Format with 2 decimal places
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Tax calculator'),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            TextField(
+              controller: _incomeController,
+              decoration: InputDecoration(
+                labelText: 'Enter income',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.number,
+            ),
+            SizedBox(height: 16),
+            TextField(
+              controller: _taxRateController,
+              decoration: InputDecoration(
+                labelText: 'Enter tax rate (%)',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.number,
+            ),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: _calculateTax,
+              child: Text('Calculate tax'),
+            ),
+            SizedBox(height: 16),
+            Text(
+              _taxAmount.isNotEmpty ? 'Tax amount: \$$_taxAmount' : '',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
